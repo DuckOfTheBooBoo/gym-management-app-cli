@@ -4,6 +4,8 @@ public class App {
 
     public static void main(String[] args) {
         // Instances initialization
-        String apakek = "apakek";
-    }
+        Scanner Scan = new Scanner(System.in);
+            String 
+            System.out.prntln(---WELCOME TO GYM ESPERT);
+    } 
 }
