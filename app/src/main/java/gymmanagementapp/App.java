@@ -2,10 +2,42 @@ package gymmanagementapp;
 
 import javax.swing.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class App {
     private static String fullName = null;
     private static String email = null;
     
+    public static void trialPass() {
+        Date date = null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        int price = 32000;
+        String trialDialogMsg = "Trial Price: Rp. 32.000\nEnter date (dd/MM/yyyy):";
+
+        while (true) {
+            String dateInput = JOptionPane.showInputDialog(null, trialDialogMsg, "Select Trial Date", JOptionPane.PLAIN_MESSAGE);
+
+            try {
+                date = dateFormat.parse(dateInput);
+
+                // Check if date has already passed.
+                if (date.getTime() < new Date().getTime()) {
+                    JOptionPane.showMessageDialog(null, "Date cannot be in the past.", "Invalid input", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    break;
+                }
+
+            } catch (ParseException e) {
+                JOptionPane.showMessageDialog(null, String.format("Invalid date format -> %s.", dateInput), "Invalid input", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        Receipt receipt = Receipt.fromTrial(fullName, email, date, price);
+        receipt.showReceipt();
+    }
+
     public static void main(String[] args) {
         // Instances initialization
         // Ask for name and email
@@ -35,7 +67,7 @@ public class App {
 
         switch (choice) {
             case "1":
-                JOptionPane.showMessageDialog(null, choice);
+                trialPass();
                 break;
             
             case "2":
