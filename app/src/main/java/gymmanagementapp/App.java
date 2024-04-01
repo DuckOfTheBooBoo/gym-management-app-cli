@@ -4,6 +4,6 @@ public class App {
 
     public static void main(String[] args) {
         // Instances initialization
-        // Saya adalah Altaf
+        String apakek = "apakek";
     }
 }
