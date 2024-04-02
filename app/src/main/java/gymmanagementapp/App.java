@@ -10,14 +10,12 @@ public class App {
     private static String fullName = null;
     private static String email = null;
     
-    public static void trialPass() {
+    public static Date dateInput(String dialogMsg, String title) {
         Date date = null;
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        int price = 32000;
-        String trialDialogMsg = "Trial Price: Rp. 32.000\nEnter date (dd/MM/yyyy):";
-
+        
         while (true) {
-            String dateInput = JOptionPane.showInputDialog(null, trialDialogMsg, "Select Trial Date", JOptionPane.PLAIN_MESSAGE);
+            String dateInput = JOptionPane.showInputDialog(null, dialogMsg, title, JOptionPane.PLAIN_MESSAGE);
 
             try {
                 date = dateFormat.parse(dateInput);
@@ -33,6 +31,16 @@ public class App {
                 JOptionPane.showMessageDialog(null, String.format("Invalid date format -> %s.", dateInput), "Invalid input", JOptionPane.ERROR_MESSAGE);
             }
         }
+
+        return date;
+    }
+
+    public static void trialPass() {
+        Date date = null;
+        int price = 32000;
+        String trialDialogMsg = "Trial Price: Rp. 32.000\nEnter date (dd/MM/yyyy):";
+
+        date = dateInput(trialDialogMsg, "Select Trial Date");
 
         Receipt receipt = Receipt.fromTrial(fullName, email, date, price);
         receipt.showReceipt();
