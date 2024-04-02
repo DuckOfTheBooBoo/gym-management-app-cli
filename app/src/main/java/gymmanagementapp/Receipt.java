@@ -22,6 +22,12 @@ public class Receipt {
         String dateString = df.format(date);
         String content = String.format("Full name: %s\nE-mail: %s\nFree Trial date: %s\nPrice: Rp. %d", fullName, email, dateString, price);
         return new Receipt(content);
+    }
 
+    public static Receipt fromPersonalTrainer(String fullName, String email, PersonalTrainer trainer, Date date) {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");    
+        String dateString = df.format(date);
+        String content = String.format("Full name: %s\nE-mail: %s\nPersonal Trainer: %s\nDate: %s\nFee: Rp. %d", fullName, email, trainer.name, dateString, trainer.fee);
+        return new Receipt(content);
     }
 }

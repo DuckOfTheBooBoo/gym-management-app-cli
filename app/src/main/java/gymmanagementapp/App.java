@@ -46,6 +46,36 @@ public class App {
         receipt.showReceipt();
     }
 
+    public static void personalTrainer() {
+        PersonalTrainer[] trainers = PersonalTrainer.getPersonalTrainers();
+        PersonalTrainer selectedTrainer = null;
+
+        // Construct menu string
+        String pTDialogMsg = "";
+        for (int i = 0; i < trainers.length; i++) {
+            String msg = String.format("""
+            %d. %s
+                Fee: Rp. %d/session
+                Rating: %d
+            """, i + 1, trainers[i].name, trainers[i].fee, trainers[i].rating);
+            pTDialogMsg += msg;
+        }
+
+        Object ptChoiceInput = JOptionPane.showInputDialog(null, pTDialogMsg, "Select Personal Trainer", JOptionPane.PLAIN_MESSAGE, null, new Object[]{1, 2, 3, 4, 5}, 1);
+
+        if (ptChoiceInput == null) {
+            JOptionPane.showMessageDialog(null, "You did not select any personal trainers. Exiting...");
+            return;
+        }
+
+        int ptChoice = Integer.parseInt(ptChoiceInput.toString());
+        selectedTrainer = trainers[ptChoice - 1];
+
+        Date date = dateInput("Input personal trainer date (dd/MM/yyyy):", "Personal Trainer Date");
+        Receipt receipt = Receipt.fromPersonalTrainer(fullName, email, selectedTrainer, date);
+        receipt.showReceipt();
+    }
+
     public static void main(String[] args) {
         // Instances initialization
         // Ask for name and email
@@ -79,7 +109,7 @@ public class App {
                 break;
             
             case "2":
-                JOptionPane.showMessageDialog(null, choice);
+                personalTrainer();
                 break;
             
             case "3":
