@@ -30,4 +30,14 @@ public class Receipt {
         String content = String.format("Full name: %s\nE-mail: %s\nPersonal Trainer: %s\nDate: %s\nFee: Rp. %d", fullName, email, trainer.name, dateString, trainer.fee);
         return new Receipt(content);
     }
+
+    public static Receipt fromMembership(String fullName, String email, Membership membership) {
+        String content = String.format("""
+                Full name: %s
+                E-mail: %s
+                Membership: %s
+                Price: Rp. %d
+                """, fullName, email, membership.name, membership.price);
+        return new Receipt(content);
+    }
 }

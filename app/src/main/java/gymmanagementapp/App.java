@@ -76,6 +76,32 @@ public class App {
         receipt.showReceipt();
     }
 
+    public static void membership() {
+        Membership[] memberships = Membership.getMemberships();
+        Membership selectedMembership = null;
+
+        String dialogMsg = "";
+        // Construct dialog message
+        for (int i = 0; i < memberships.length; i++) {
+            dialogMsg += String.format("""
+            %d. %s (Rp. %d)
+            """, i + 1, memberships[i].name, memberships[i].price);
+        }
+
+        Object choiceInput = JOptionPane.showInputDialog(null, dialogMsg, "Select Membership", JOptionPane.PLAIN_MESSAGE, null, new Object[]{1, 2, 3, 4}, 1);
+
+        if (choiceInput == null) {
+            JOptionPane.showMessageDialog(null, "You did not select any membership. Exiting...");
+            return;
+        }
+
+        int choice = Integer.parseInt(choiceInput.toString());
+        selectedMembership = memberships[choice - 1];
+
+        Receipt receipt = Receipt.fromMembership(fullName, email, selectedMembership);
+        receipt.showReceipt();
+    }
+
     public static void main(String[] args) {
         // Instances initialization
         // Ask for name and email
@@ -113,7 +139,7 @@ public class App {
                 break;
             
             case "3":
-                JOptionPane.showMessageDialog(null, choice);
+                membership();
                 break;
             
             case "4":
