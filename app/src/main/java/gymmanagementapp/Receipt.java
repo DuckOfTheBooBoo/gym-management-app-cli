@@ -4,7 +4,7 @@ import javax.swing.*;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 
 public class Receipt {
     private String content = "";
@@ -30,4 +30,38 @@ public class Receipt {
         String content = String.format("Full name: %s\nE-mail: %s\nPersonal Trainer: %s\nDate: %s\nFee: Rp. %d", fullName, email, trainer.name, dateString, trainer.fee);
         return new Receipt(content);
     }
+
+    public static Receipt fromMembership(String fullName, String email, Membership membership) {
+        String content = String.format("""
+                Full name: %s
+                E-mail: %s
+                Membership: %s
+                Price: Rp. %d
+                """, fullName, email, membership.name, membership.price);
+        return new Receipt(content);
+    }
+
+    public static Receipt fromCart(String fullName, String email, ArrayList<Suplement> cart) {
+        String header = String.format("""
+                Full name: %s
+                E-mail: %s
+                =======ITEMS=======
+                """, fullName, email);
+
+        int total = 0;
+        // Construct items list
+        String items = "";
+        for (Suplement suplement : cart) {
+            items += String.format("""
+                    %s \tRp. %d
+                    (%s)
+                    \tQty: %d
+                    """, suplement.name, suplement.price, suplement.selectedVariant, suplement.selectedQuantity);
+            total += suplement.price * suplement.selectedQuantity;
+        }
+
+        String totalStr = String.format("\nTotal:\t Rp. %d", total);
+        String content = header + items + totalStr;
+        return new Receipt(content);
+    }   
 }

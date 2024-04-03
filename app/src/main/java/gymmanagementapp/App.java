@@ -6,7 +6,7 @@ package gymmanagementapp;
 import javax.swing.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 
 public class App {
     private static String fullName = null;
@@ -77,6 +77,7 @@ public class App {
         Receipt receipt = Receipt.fromPersonalTrainer(fullName, email, selectedTrainer, date);
         receipt.showReceipt();
     }
+
     
     // Membership
     public static void MembershipJava() {
@@ -93,6 +94,118 @@ public class App {
     
     //BundleGYM
     
+
+
+    public static void membership() {
+        Membership[] memberships = Membership.getMemberships();
+        Membership selectedMembership = null;
+
+        String dialogMsg = "";
+        // Construct dialog message
+        for (int i = 0; i < memberships.length; i++) {
+            dialogMsg += String.format("""
+            %d. %s (Rp. %d)
+            """, i + 1, memberships[i].name, memberships[i].price);
+        }
+
+        Object choiceInput = JOptionPane.showInputDialog(null, dialogMsg, "Select Membership", JOptionPane.PLAIN_MESSAGE, null, new Object[]{1, 2, 3, 4}, 1);
+
+        if (choiceInput == null) {
+            JOptionPane.showMessageDialog(null, "You did not select any membership. Exiting...");
+            return;
+        }
+
+        int choice = Integer.parseInt(choiceInput.toString());
+        selectedMembership = memberships[choice - 1];
+
+        Receipt receipt = Receipt.fromMembership(fullName, email, selectedMembership);
+        receipt.showReceipt();
+    }
+
+    public static void suplement() {
+        Suplement[] suplements = Suplement.getSuplements();
+        ArrayList<Suplement> cart = new ArrayList<Suplement>();
+        boolean multipleSuplements = false;
+        
+        
+        do {
+            String dialogMsg = "";
+            // Construct dialog message
+            for(int i = 0; i < suplements.length; i++) {
+                dialogMsg += String.format("""
+                %d. %s
+                    %s
+                    Variant: %s
+                    Rp. %d
+                    Stock: %d
+                """, i + 1, suplements[i].name, suplements[i].description, Arrays.toString(suplements[i].variants), suplements[i].price, suplements[i].stock);    
+            }
+
+            Suplement selectedSuplement = null;
+            Object choiceInput = JOptionPane.showInputDialog(null, dialogMsg, "Select Suplement", JOptionPane.PLAIN_MESSAGE, null, new Object[]{1, 2, 3, 4, 5}, null);
+
+            if (choiceInput == null) {
+                JOptionPane.showMessageDialog(null, "You did not select any suplement. Exiting...");
+                return;
+            }
+
+            int choice = Integer.parseInt(choiceInput.toString());
+            selectedSuplement = suplements[choice - 1];
+            
+            // Select quantity
+            while (true) {
+                String quantity = JOptionPane.showInputDialog(null, "Input quantity:", "Select Quantity", JOptionPane.PLAIN_MESSAGE);
+
+                try {
+                    int quantityInt = Integer.parseInt(quantity);
+                    if (quantityInt > 0 && quantityInt <= selectedSuplement.stock) {
+                        selectedSuplement.selectedQuantity = quantityInt;
+                        break;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Invalid quantity. Please try again.");
+                    }
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Invalid input. Please try again.");
+                }
+            }
+
+            // Select variants
+            String variantDialogMsg = "";
+            ArrayList<Integer> variantIntChoices = new ArrayList<Integer>();
+
+            // Construct variant msg
+            for (int i = 0; i < selectedSuplement.variants.length; i++) {
+                variantDialogMsg += String.format("%d. %s\n", i + 1, selectedSuplement.variants[i]);
+                variantIntChoices.add((int)(i + 1));
+            }
+
+            Object variantInput = JOptionPane.showInputDialog(null, variantDialogMsg, "Select Suplement Variant", JOptionPane.PLAIN_MESSAGE, null, variantIntChoices.toArray(new Object[variantIntChoices.size()]), null);
+
+            if (variantInput == null) {
+                JOptionPane.showMessageDialog(null, "You did not select any variant. Exiting...");
+                return;
+            }
+
+            int variantChoice = Integer.parseInt(variantInput.toString());
+            selectedSuplement.selectedVariant = selectedSuplement.variants[variantChoice - 1];
+
+            int buyMore = JOptionPane.showConfirmDialog(null, "Do you want to buy other suplements?", "Choice", JOptionPane.YES_NO_OPTION);
+
+            if (buyMore == JOptionPane.YES_OPTION) {
+                multipleSuplements = true;
+            } else {
+                multipleSuplements = false;
+            }
+
+            cart.add(selectedSuplement);
+            // Update Suplements stock array
+            suplements[choice - 1].stock -= selectedSuplement.selectedQuantity;
+        } while(multipleSuplements);
+
+        Receipt receipt = Receipt.fromCart(fullName, email, cart);
+        receipt.showReceipt();
+    }
+
     public static void main(String[] args) {
         // Instances initialization\
         // Ask for name and email
@@ -132,10 +245,8 @@ public class App {
             case "3":
                 MembershipJava();
                 break;
-            
             case "4":
                 Suplement();
-                break;
             
             case "5":
                 BundleGymJava();
