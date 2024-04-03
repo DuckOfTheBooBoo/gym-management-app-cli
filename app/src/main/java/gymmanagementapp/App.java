@@ -1,25 +1,158 @@
 package gymmanagementapp;
-import javax.swing.JOptionPane;
+//<<<<<<< HEAD
+
+//=======
+
+import javax.swing.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class App {
+    private static String fullName = null;
+    private static String email = null;
+    
+    public static Date dateInput(String dialogMsg, String title) {
+        Date date = null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        
+        while (true) {
+            String dateInput = JOptionPane.showInputDialog(null, dialogMsg, title, JOptionPane.PLAIN_MESSAGE);
+
+            try {
+                date = dateFormat.parse(dateInput);
+
+                // Check if date has already passed.
+                if (date.getTime() < new Date().getTime()) {
+                    JOptionPane.showMessageDialog(null, "Date cannot be in the past.", "Invalid input", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    break;
+                }
+
+            } catch (ParseException e) {
+                JOptionPane.showMessageDialog(null, String.format("Invalid date format -> %s.", dateInput), "Invalid input", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        return date;
+    }
+
+    public static void trialPass() {
+        Date date = null;
+        int price = 32000;
+        String trialDialogMsg = "Trial Price: Rp. 32.000\nEnter date (dd/MM/yyyy):";
+
+        date = dateInput(trialDialogMsg, "Select Trial Date");
+
+        Receipt receipt = Receipt.fromTrial(fullName, email, date, price);
+        receipt.showReceipt();
+    }
+
+    public static void personalTrainer() {
+        PersonalTrainer[] trainers = PersonalTrainer.getPersonalTrainers();
+        PersonalTrainer selectedTrainer = null;
+
+        // Construct menu string
+        String pTDialogMsg = "";
+        for (int i = 0; i < trainers.length; i++) {
+            String msg = String.format("""
+            %d. %s
+                Fee: Rp. %d/session
+                Rating: %d
+            """, i + 1, trainers[i].name, trainers[i].fee, trainers[i].rating);
+            pTDialogMsg += msg;
+        }
+
+        Object ptChoiceInput = JOptionPane.showInputDialog(null, pTDialogMsg, "Select Personal Trainer", JOptionPane.PLAIN_MESSAGE, null, new Object[]{1, 2, 3, 4, 5}, 1);
+
+        if (ptChoiceInput == null) {
+            JOptionPane.showMessageDialog(null, "You did not select any personal trainers. Exiting...");
+            return;
+        }
+
+        int ptChoice = Integer.parseInt(ptChoiceInput.toString());
+        selectedTrainer = trainers[ptChoice - 1];
+
+        Date date = dateInput("Input personal trainer date (dd/MM/yyyy):", "Personal Trainer Date");
+        Receipt receipt = Receipt.fromPersonalTrainer(fullName, email, selectedTrainer, date);
+        receipt.showReceipt();
+    }
+    
+    // Membership
+    public static void MembershipJava() {
+        String[] menuMembership = {"1. Membership 3 month \n(Free acces while in the GYM EXPERT\n" +
+"   Fee: 800.000)", "2. Membership 6 Month \n(Free acces while in the GYM EXPERT\n" +
+"   Fee: 1.800.000)", "3. Membership 12 Month \n(Fee acces while in the GYM EXPERT \n" +
+"   Fee: 2.600.000)", "4. Membership 18 Month \n(Free acces while in the GYM EXPERT\n" +
+"   Fee: 3.900.000)"};
+        Object choiceInput = JOptionPane.showInputDialog(null, menuMembership, "Select option", JOptionPane.PLAIN_MESSAGE, null, new Object[]{"1", "2", "3", "4"}, "1");
+    }
+    
+    //Suplement
+    
+    
+    //BundleGYM
+    
     public static void main(String[] args) {
-        // Instances initialization
-        // Suplement Gym
-        String[] nameSuplement = {"1. Pro Garnier 900gr\n(Pro Garnier adalah suplemen mass garnier untuk meningkatkan berat badan yang sehat dan berkontribusi pada pertumbuhan    massa otot.\n" +
-"   Varian rasa: Glame Chocolate, Caramel Fusion, Honeydew Melon, Choco Mint, Vanilla Popcorn.\n" +
-"   Rp. 245.000\n" +
-"   Stock: 12)", "2. Pro Whey100 900gr\n(Pro Whey100 adalah whey protein powder yang mengandung 24g protein, 140 kalori, 1g lemak, dan menggunakan pemanis alami daun stevia.\n" +
-"   Varian rasa: Coklat, Vanilla Kurma Madu, Stroberi.\n" +
-"   Rp. 294.000\n" +
-"   Stock: 10)", "3. Pro Isolate 900gr\n(Pro Isalate adalah Whey proetin murni dengan daya serap 90% yang mampu dengan efektif menambah asupan protein harian dengan 27g Protein, 140 Kalori, 1g Gula, & 0 fat/sajian.\n" +
-"   Varian rasa: Chocolate Soul, Taro Velvet, Banana Coffe, Strawberry Parfait, Honey Banana.\n" +
-"   Rp. 427.000\n" +
-"   Stock: 10)", "4. Pro Creatine 420gr\n(Pro Creatine merupakan suplemen creatine yang diformulasikan khusu untuk membantu meningkatkan kekuatan & daya tahan otot serta meningkatkan Volume otot secara maksimal.\n" +
-"   Varian rasa: Bubblegum, Mixberry.\n" +
-"   Rp. 259.000\n" +
-"   Stock: 12)", "5. Pro Isolate 900gr + Pro Garnier 900gr (Combo Deals)\n(Varian Combo Deals ini sangat cocok bagi yang ingin Bulking, karena menyerap daya 90% yang mampu menambah asupan protein harian membuat pertumbuhan otot semakin sempurna.\n" +
-"   Varian Rasa: Caramel Fusion, Glame Chocolate, Honeydew Melon, Vanilla Popcorn, Choco Mint.\n" +
-"   Rp. 672.000\n" +
-"   Stock: 7)"};
-        JOptionPane.showInputDialog(null, nameSuplement);
-    } 
+        // Instances initialization\
+        // Ask for name and email
+        while (true) {
+            fullName = JOptionPane.showInputDialog(null, "WELCOME TO GYM EXPERT\nEnter your name:", "GYM EXPERT", JOptionPane.PLAIN_MESSAGE);
+            email = JOptionPane.showInputDialog(null, "Enter your e-mail:", "GYM EXPERT", JOptionPane.PLAIN_MESSAGE);
+
+            if ((fullName == null || fullName.isEmpty()) || (email == null || email.isEmpty())) {
+                JOptionPane.showMessageDialog(null, "Please enter your name and e-mail.", "Invalid input", JOptionPane.ERROR_MESSAGE);
+            } else {
+                break;
+            }
+        }
+
+        // Menu choices
+        String menuChoices = """
+            1. Trial (One-day pass)
+            2. Personal Trainer
+            3. Membership
+            4. Suplement
+            5. Bundle
+            """;
+        
+        Object choiceInput = JOptionPane.showInputDialog(null, menuChoices, "Select option", JOptionPane.PLAIN_MESSAGE, null, new Object[]{"1", "2", "3", "4", "5"}, "1");
+
+        String choice = choiceInput != null ? choiceInput.toString() : "";
+
+        switch (choice) {
+            case "1":
+                trialPass();
+                break;
+            
+            case "2":
+                personalTrainer();
+                break;
+            
+            case "3":
+                MembershipJava();
+                break;
+            
+            case "4":
+                Suplement();
+                break;
+            
+            case "5":
+                BundleGymJava();
+                break;
+            
+            default:
+                JOptionPane.showMessageDialog(null, "You did not select any option. Exiting...");
+                break;
+        }
+    }
+//>>>>>>> 8fb6530bdd10cec80cec823c5f601ce3db2f7d3e
+
+    private static void Suplement() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private static void BundleGymJava() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
