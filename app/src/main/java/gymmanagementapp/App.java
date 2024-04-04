@@ -186,6 +186,34 @@ public class App {
         receipt.showReceipt();
     }
 
+    public static void bundle() {
+        Bundle[] bundles = Bundle.getBundles();
+        Bundle selectedBundle = null;
+        
+        
+        String dialogMsg = "";
+
+        for(int i = 0; i < bundles.length; i++) {
+            dialogMsg += String.format("""
+            %d. %s
+                %s
+                Rp. %d
+            """, i + 1, bundles[i].name, bundles[i].description, bundles[i].price);    
+        }
+
+        Object choiceInput = JOptionPane.showInputDialog(null, dialogMsg, "Select Bundle", JOptionPane.PLAIN_MESSAGE, null, new Object[]{1, 2, 3}, null);
+
+        if (choiceInput == null) {
+            JOptionPane.showMessageDialog(null, "You did not select any bundle. Exiting...");
+            return;
+        }
+
+        int choice = Integer.parseInt(choiceInput.toString());
+        selectedBundle = bundles[choice - 1];
+
+
+    }
+
     public static void main(String[] args) {
         // Instances initialization
         // Ask for name and email
