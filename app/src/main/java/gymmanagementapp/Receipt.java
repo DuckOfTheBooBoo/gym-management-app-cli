@@ -2,52 +2,88 @@ package gymmanagementapp;
 
 import javax.swing.*;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class Receipt {
-    private String content = "";
+abstract public class Receipt {
+    protected String content = "";
+    protected String fullName;
+    protected String email;
 
-    public Receipt(String content) {
-        this.content = content;
+    public Receipt(String fullName, String email) {
+        this.fullName = fullName;
+        this.email = email;
     }
 
     public void showReceipt() {
-        JOptionPane.showMessageDialog(null, content, "Receipt", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, this.content, "Receipt", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public static Receipt fromTrial(String fullName, String email, Date date, int price) {
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");    
-        String dateString = df.format(date);
-        String content = String.format("Full name: %s\nE-mail: %s\nFree Trial date: %s\nPrice: Rp. %d", fullName, email, dateString, price);
-        return new Receipt(content);
-    }
-
-    public static Receipt fromPersonalTrainer(String fullName, String email, PersonalTrainer trainer, Date date) {
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");    
-        String dateString = df.format(date);
-        String content = String.format("Full name: %s\nE-mail: %s\nPersonal Trainer: %s\nDate: %s\nFee: Rp. %d", fullName, email, trainer.name, dateString, trainer.fee);
-        return new Receipt(content);
-    }
-
-    public static Receipt fromMembership(String fullName, String email, Membership membership) {
-        String content = String.format("""
+    public void constructHeader() {
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        String header = String.format("""
+                ========RECEIPT=========
+                Date: %s
                 Full name: %s
                 E-mail: %s
+                ========CONTENT=========
+                """, df.format(new Date()), fullName, email);
+        this.content += header;
+    }
+
+    abstract protected void constructBody();
+}
+
+class TrialReceipt extends Receipt {
+    private Date date;
+    private int price;
+
+    public TrialReceipt(String fullName, String email, Date date, int price) {
+        super(fullName, email);
+        this.date = date;
+        this.price = price;
+        this.constructHeader();
+        this.constructBody();
+    }
+
+    protected void constructBody() {
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");    
+        String dateString = df.format(this.date);
+        this.content += String.format("""
+            Free Trial date: %s
+            Price: Rp. %d""", dateString, this.price);
+    }
+}
+
+class MembershipReceipt extends Receipt {
+    private Membership membership;
+
+    public MembershipReceipt(String fullName, String email, Membership membership) {
+        super(fullName, email);
+        this.membership = membership;
+        this.constructHeader();
+        this.constructBody();
+    }
+
+    protected void constructBody() {
+        this.content += String.format("""
                 Membership: %s
                 Price: Rp. %d
-                """, fullName, email, membership.name, membership.price);
-        return new Receipt(content);
+                """, membership.name, membership.price);
+    }
+}
+
+class CartReceipt extends Receipt {
+    private ArrayList<Suplement> cart;
+
+    public CartReceipt(String fullName, String email, ArrayList<Suplement> cart) {
+        super(fullName, email);
+        this.cart = cart;
+        this.constructHeader();
+        this.constructBody();
     }
 
-    public static Receipt fromCart(String fullName, String email, ArrayList<Suplement> cart) {
-        String header = String.format("""
-                Full name: %s
-                E-mail: %s
-                =======ITEMS=======
-                """, fullName, email);
-
+    protected void constructBody() {
         int total = 0;
         // Construct items list
         String items = "";
@@ -61,7 +97,24 @@ public class Receipt {
         }
 
         String totalStr = String.format("\nTotal:\t Rp. %d", total);
-        String content = header + items + totalStr;
-        return new Receipt(content);
-    }   
+        this.content += items + totalStr;
+    }
+}
+
+class PersonalTrainerReceipt extends Receipt {
+    private PersonalTrainer trainer;
+
+    public PersonalTrainerReceipt(String fullName, String email, PersonalTrainer trainer) {
+        super(fullName, email);
+        this.trainer = trainer;
+        this.constructHeader();
+        this.constructBody();
+    }
+
+    protected void constructBody() {
+        this.content += String.format("""
+            Personal Trainer: %s
+            Date: %s
+            Fee: Rp. %d""", trainer.name, trainer.getDateString(), trainer.fee);       
+    }
 }
