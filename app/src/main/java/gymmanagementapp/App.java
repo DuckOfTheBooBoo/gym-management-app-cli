@@ -252,7 +252,8 @@ public class App {
         }
 
         selectedBundle.personalTrainer = selectedPersonalTrainer;
-        // Receipt receipt = Receipt.fromBundle(fullName, email, selectedBundle);
+        Receipt receipt = new BundleReceipt(fullName, email, selectedBundle);
+        receipt.showReceipt();
     }
 
     public static void main(String[] args) {
@@ -269,7 +270,7 @@ public class App {
             }
         }
         
-        Object choiceInput = JOptionPane.showInputDialog(null, "Pilih menu dibawah", "Select option", JOptionPane.PLAIN_MESSAGE, null, new Object[]{"Trial", "Personal Trainer", "Membership", "Suplement", "Bundle"}, "Trial");
+        Object choiceInput = JOptionPane.showInputDialog(null, "Select options below", "Select option", JOptionPane.PLAIN_MESSAGE, null, new Object[]{"Trial", "Personal Trainer", "Membership", "Suplement", "Bundle"}, "Trial");
 
         String choice = choiceInput != null ? choiceInput.toString() : "";
 
@@ -292,7 +293,7 @@ public class App {
                 break;
             
             case "Bundle":
-                JOptionPane.showMessageDialog(null, choice);
+                bundle();
                 break;
             
             default:

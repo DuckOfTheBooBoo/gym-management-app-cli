@@ -118,3 +118,24 @@ class PersonalTrainerReceipt extends Receipt {
             Fee: Rp. %d""", trainer.name, trainer.getDateString(), trainer.fee);       
     }
 }
+
+class BundleReceipt extends Receipt {
+    private Bundle bundle;
+
+    public BundleReceipt(String fullName, String email, Bundle bundle) {
+        super(fullName, email);
+        this.bundle = bundle;
+        this.constructHeader();
+        this.constructBody();
+    }
+
+    protected void constructBody() {
+        this.content += String.format("""
+                %s
+                %s
+                %s
+                %s (%d scoop/week)
+                Rp. %d
+                """, bundle.name, bundle.membership.name, bundle.personalTrainer.name, bundle.suplement.name, bundle.scoopQuota, bundle.price);
+    }
+}

@@ -1,5 +1,7 @@
 package gymmanagementapp;
 
+import java.util.ArrayList;
+
 public class Bundle {
     public String name = "";
     public int price = 0;
@@ -18,16 +20,18 @@ public class Bundle {
         this.membership = membership;
         this.personalTrainer = personalTrainer;
     }
+}
 
-    public static Bundle[] getBundles() {
-        Membership[] memberships = Membership.getMemberships();
+class BundleHelper {
+    private static ArrayList<Bundle> bundles = new ArrayList<Bundle>();
 
-        return new Bundle[] {
-            new Bundle("3 Months Membership", 1000000, 1, "Free Suplement 1 scoop/week", null, memberships[0], 
-            null),
-            new Bundle("6 Months Membership", 2100000, 3, "Free 1 Personal Trainer Session\nFree Suplement 3 scoop/week", null, memberships[1],
-            null),
-            new Bundle("12 Months Membership", 3400000, 1, "Free 2 Personal Trainer Session\nFree Suplement 4 scoop/week", null, memberships[2], null)
-        };
+    public static ArrayList<Bundle> getBundles() {
+        if (bundles.size() == 0) {
+            Membership[] memberships = MembershipHelper.getMemberships();            
+            bundles.add(new Bundle("Bundle ADDICT", 1000000, 1, "Free Suplement 1 scoop/week", null, memberships[0], null));
+            bundles.add(new Bundle("Bundle EXPERT", 2100000, 3, "Free 1 Personal Trainer Session\nFree Suplement 3 scoop/week", null, memberships[1], null));
+            bundles.add(new Bundle("Bundle MAJAPAHIT", 3400000, 1, "Free 2 Personal Trainer Session\nFree Suplement 4 scoop/week", null, memberships[2], null));
+        }
+        return bundles;
     }
 }
