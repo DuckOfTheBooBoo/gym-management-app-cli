@@ -19,7 +19,7 @@ abstract public class Receipt {
         JOptionPane.showMessageDialog(null, this.content, "Receipt", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public void constructHeader() {
+    protected void constructHeader() {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String header = String.format("""
                 ========RECEIPT=========
