@@ -20,6 +20,14 @@ public class Bundle {
         this.membership = membership;
         this.personalTrainer = personalTrainer;
     }
+
+    public String getDetails() {
+        return String.format("""
+            %s
+              %s
+              Rp. %d
+            """, this.name, this.description, this.price);
+    }
 }
 
 class BundleHelper {
@@ -28,9 +36,9 @@ class BundleHelper {
     public static ArrayList<Bundle> getBundles() {
         if (bundles.size() == 0) {
             Membership[] memberships = MembershipHelper.getMemberships();            
-            bundles.add(new Bundle("Bundle ADDICT", 1000000, 1, "Free Suplement 1 scoop/week", null, memberships[0], null));
-            bundles.add(new Bundle("Bundle EXPERT", 2100000, 3, "Free 1 Personal Trainer Session\nFree Suplement 3 scoop/week", null, memberships[1], null));
-            bundles.add(new Bundle("Bundle MAJAPAHIT", 3400000, 1, "Free 2 Personal Trainer Session\nFree Suplement 4 scoop/week", null, memberships[2], null));
+            bundles.add(new Bundle("Bundle ADDICT", 1000000, 1, "3 Months Membership\nFree Suplement 1 scoop/week", null, memberships[0], null));
+            bundles.add(new Bundle("Bundle EXPERT", 2100000, 3, "6 Months Membership\nFree 1 Personal Trainer Session\nFree Suplement 3 scoop/week", null, memberships[1], null));
+            bundles.add(new Bundle("Bundle MAJAPAHIT", 3400000, 1, "12 Months Membership\nFree 2 Personal Trainer Session\nFree Suplement 4 scoop/week", null, memberships[2], null));
         }
         return bundles;
     }

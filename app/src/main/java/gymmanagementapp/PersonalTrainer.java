@@ -23,6 +23,14 @@ public class PersonalTrainer {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return df.format(this.date);
     }
+
+    public String getDetails() {
+        return String.format("""
+                %s
+                    Rating: %d
+                    Fee: Rp. %d/session
+                """, this.name, this.rating, this.fee);
+    }
 }
 
 class PersonalTrainerHelper {

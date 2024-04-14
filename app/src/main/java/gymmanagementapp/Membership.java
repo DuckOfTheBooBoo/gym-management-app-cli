@@ -10,6 +10,10 @@ public class Membership {
         this.price = price;
         this.durationMonth = durationMonth;
     }
+
+    public String getDetails() {
+        return String.format("%s (Rp. %d)", this.name, this.price);
+    }
 }
 
 class MembershipHelper {

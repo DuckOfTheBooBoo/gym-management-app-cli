@@ -1,5 +1,7 @@
 package gymmanagementapp;
 
+import java.util.Arrays;
+
 public class Suplement {
     public String name = "";
     public String description = "";
@@ -15,6 +17,16 @@ public class Suplement {
         this.variants = variants;
         this.price = price;
         this.stock = stock;
+    }
+
+    public String getDetails() {
+        return String.format("""
+                %s
+                  %s
+                  Variants: %s
+                  Rp. %d
+                  Stock: %d
+                """, this.name, this.description, Arrays.toString(this.variants), this.price, this.stock);
     }
 }
 
