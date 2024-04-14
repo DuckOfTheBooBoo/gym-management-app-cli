@@ -49,27 +49,29 @@ public class App {
     public static PersonalTrainer selectPersonalTrainer() {
         PersonalTrainer[] trainers = PersonalTrainerHelper.getPersonalTrainers();
         PersonalTrainer selectedTrainer = null;
+        Map<String, Integer> trainerMap = new HashMap<String, Integer>();
+
 
         // Construct menu string
         String pTDialogMsg = "";
         for (int i = 0; i < trainers.length; i++) {
-            String msg = String.format("""
-            %d. %s
-                Fee: Rp. %d/session
-                Rating: %d
-            """, i + 1, trainers[i].name, trainers[i].fee, trainers[i].rating);
-            pTDialogMsg += msg;
+            trainerMap.put(trainers[i].name, i + 1);
+            pTDialogMsg += String.format("%d. %s", i + 1, trainers[i].getDetails());
         }
 
-        Object ptChoiceInput = JOptionPane.showInputDialog(null, pTDialogMsg, "Select Personal Trainer", JOptionPane.PLAIN_MESSAGE, null, new Object[]{1, 2, 3, 4, 5}, 1);
+        for (int i = 0; i < trainers.length; i++) {
+            trainerMap.put(trainers[i].name, i);
+        }
+
+        Object ptChoiceInput = JOptionPane.showInputDialog(null, pTDialogMsg, "Select Personal Trainer", JOptionPane.PLAIN_MESSAGE, null, trainerMap.keySet().toArray(), 1);
 
         if (ptChoiceInput == null) {
             JOptionPane.showMessageDialog(null, "You did not select any personal trainers. Exiting...");
             return null;
         }
 
-        int ptChoice = Integer.parseInt(ptChoiceInput.toString());
-        selectedTrainer = trainers[ptChoice - 1];
+        int trainerIndex = trainerMap.get(ptChoiceInput);
+        selectedTrainer = trainers[trainerIndex];
         Date date = dateInput("Input personal trainer date (dd/MM/yyyy):", "Personal Trainer Date");
         selectedTrainer.setDate(date);
 
@@ -86,24 +88,24 @@ public class App {
     public static void membership() {
         Membership[] memberships = MembershipHelper.getMemberships();
         Membership selectedMembership = null;
+        ArrayList<String> membershipOptions = new ArrayList<String>();
+        Map<String, Integer> membershipMap = new HashMap<>();
 
-        String dialogMsg = "";
         // Construct dialog message
         for (int i = 0; i < memberships.length; i++) {
-            dialogMsg += String.format("""
-            %d. %s (Rp. %d)
-            """, i + 1, memberships[i].name, memberships[i].price);
+            membershipOptions.add(memberships[i].getDetails());
+            membershipMap.put(memberships[i].getDetails(), i);
         }
 
-        Object choiceInput = JOptionPane.showInputDialog(null, dialogMsg, "Select Membership", JOptionPane.PLAIN_MESSAGE, null, new Object[]{1, 2, 3, 4}, 1);
+        Object choiceInput = JOptionPane.showInputDialog(null, "Select Membership", "Select Membership", JOptionPane.PLAIN_MESSAGE, null, membershipOptions.toArray(), null);
 
         if (choiceInput == null) {
             JOptionPane.showMessageDialog(null, "You did not select any membership. Exiting...");
             return;
         }
 
-        int choice = Integer.parseInt(choiceInput.toString());
-        selectedMembership = memberships[choice - 1];
+        int membershipIndex = membershipMap.get(choiceInput);
+        selectedMembership = memberships[membershipIndex];
 
         if (selectedMembership == null) {
             return;
@@ -115,6 +117,8 @@ public class App {
 
     public static Suplement selectSuplement() {
         Suplement[] suplements = SuplementHelper.getSuplements();
+        ArrayList<String> suplementOptions = new ArrayList<String>();
+        Map<String, Integer> suplementMap = new HashMap<>();
         Suplement selectedSuplement = null;
         String dialogMsg = "";
 
@@ -122,42 +126,38 @@ public class App {
         for(int i = 0; i < suplements.length; i++) {
             dialogMsg += String.format("""
             %d. %s
-                %s
-                Variant: %s
-                Rp. %d
-                Stock: %d
-            """, i + 1, suplements[i].name, suplements[i].description, Arrays.toString(suplements[i].variants), suplements[i].price, suplements[i].stock);    
+            """, i + 1, suplements[i].getDetails());
+            suplementOptions.add(suplements[i].name);
+            suplementMap.put(suplements[i].name, i);
         }
 
-        Object choiceInput = JOptionPane.showInputDialog(null, dialogMsg, "Select Suplement", JOptionPane.PLAIN_MESSAGE, null, new Object[]{1, 2, 3, 4, 5}, null);
+        Object choiceInput = JOptionPane.showInputDialog(null, dialogMsg, "Select Suplement", JOptionPane.PLAIN_MESSAGE, null, suplementOptions.toArray(), null);
 
         if (choiceInput == null) {
             JOptionPane.showMessageDialog(null, "You did not select any suplement. Exiting...");
             return null;
         }
 
-        int choice = Integer.parseInt(choiceInput.toString());
-        selectedSuplement = suplements[choice - 1];
+        int suplementIndex = suplementMap.get(choiceInput);
+        selectedSuplement = suplements[suplementIndex];
 
         // Select variants
-        String variantDialogMsg = "";
-        ArrayList<Integer> variantIntChoices = new ArrayList<Integer>();
+        // String variantDialogMsg = "";
+        ArrayList<String> variantOptions = new ArrayList<String>();
 
         // Construct variant msg
         for (int i = 0; i < selectedSuplement.variants.length; i++) {
-            variantDialogMsg += String.format("%d. %s\n", i + 1, selectedSuplement.variants[i]);
-            variantIntChoices.add((int)(i + 1));
+            variantOptions.add(selectedSuplement.variants[i]);
         }
 
-        Object variantInput = JOptionPane.showInputDialog(null, variantDialogMsg, "Select Suplement Variant", JOptionPane.PLAIN_MESSAGE, null, variantIntChoices.toArray(new Object[variantIntChoices.size()]), null);
+        Object variantInput = JOptionPane.showInputDialog(null, "Select variant", "Select Suplement Variant", JOptionPane.PLAIN_MESSAGE, null, variantOptions.toArray(), null);
 
         if (variantInput == null) {
             JOptionPane.showMessageDialog(null, "You did not select any variant. Exiting...");
             return null;
         }
 
-        int variantChoice = Integer.parseInt(variantInput.toString());
-        selectedSuplement.selectedVariant = selectedSuplement.variants[variantChoice - 1];
+        selectedSuplement.selectedVariant = variantInput.toString();
 
         return selectedSuplement;
     }
@@ -213,27 +213,26 @@ public class App {
     public static void bundle() {
         ArrayList<Bundle> bundles = BundleHelper.getBundles();
         Bundle selectedBundle = null;
-        
+        ArrayList<String> bundleOptions = new ArrayList<String>();
+        Map<String, Integer> bundleMap = new HashMap<>();
         
         String dialogMsg = "";
 
         for(int i = 0; i < bundles.size(); i++) {
-            dialogMsg += String.format("""
-            %d. %s
-                %s
-                Rp. %d
-            """, i + 1, bundles.get(i).name, bundles.get(i).description, bundles.get(i).price);    
+            dialogMsg += String.format("%d. %s", i + 1, bundles.get(i).getDetails());    
+            bundleOptions.add(bundles.get(i).name);
+            bundleMap.put(bundles.get(i).name, i);
         }
 
-        Object choiceInput = JOptionPane.showInputDialog(null, dialogMsg, "Select Bundle", JOptionPane.PLAIN_MESSAGE, null, new Object[]{1, 2, 3}, null);
+        Object choiceInput = JOptionPane.showInputDialog(null, dialogMsg, "Select Bundle", JOptionPane.PLAIN_MESSAGE, null, bundleOptions.toArray(), null);
 
         if (choiceInput == null) {
             JOptionPane.showMessageDialog(null, "You did not select any bundle. Exiting...");
             return;
         }
 
-        int choice = Integer.parseInt(choiceInput.toString());
-        selectedBundle = bundles.get(choice - 1);
+        int bundleIndex = bundleMap.get(choiceInput);
+        selectedBundle = bundles.get(bundleIndex);
 
         // Choose suplement
         Suplement selectedSuplement = selectSuplement();
