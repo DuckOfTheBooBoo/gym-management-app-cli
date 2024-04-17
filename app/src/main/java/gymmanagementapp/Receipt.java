@@ -5,21 +5,27 @@ import javax.swing.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/*
+ * Kelas abstrak Receipt
+ * Kelas ini berguna untuk membuat sebuah "template" untuk subclass nanti yang akan dibuat
+ */
 abstract public class Receipt {
-    protected String content = "";
-    protected String fullName;
-    protected String email;
-    protected int total;
+    protected String content = ""; // Berisi konten struk
+    protected String fullName; // Berisi full name user
+    protected String email; // Berisi email user
+    protected int total; // Berisi total transaksi
 
     public Receipt(String fullName, String email) {
         this.fullName = fullName;
         this.email = email;
     }
 
+    // method untuk menampilkan struk dengan JOptionPane
     public void showReceipt() {
         JOptionPane.showMessageDialog(null, this.content, "Receipt", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    // method untuk membuat bagian atas dari struk
     protected void constructHeader() {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String header = String.format("""
@@ -30,23 +36,30 @@ abstract public class Receipt {
                 E-mail: %s
                 ==========================
                 """, df.format(new Date()), fullName, email);
-        this.content += header;
+        this.content += header; // Menambahkan bagian header ke dalam content
     }
 
+    // method abstrak untuk membuat bagian tengah struk.
+    // Karena konten struk berbeda-beda tergantung dengan produk apa yang dipilih
+    // Maka kita biarkan setiap subclass untuk mengimplementasikannya secara mandiri (logic yang berbeda beda)
     abstract protected void constructBody();
 
+    // method untuk membuat bagian bawah struk
     protected void constructFooter() {
+        // Menambahkan bagian footer ke dalam content
         this.content += String.format("""
-            
+
                 ==========================
                 TOTAL: Rp. %d
                 """,this.total);
     }
 }
 
+// Class TrialReceipt yang mewarisi Receipt
+// Berguna untuk membuat Receipt (struk) dengan content Trial
 class TrialReceipt extends Receipt {
-    private Date date;
-    private int price;
+    private Date date; // Berisi tanggal trial
+    private int price; // Berisi harga trial
 
     public TrialReceipt(String fullName, String email, Date date, int price) {
         super(fullName, email);
@@ -57,18 +70,21 @@ class TrialReceipt extends Receipt {
         this.constructFooter();
     }
 
+    // Membangun content struk sesuai dengan data yang trial miliki
     protected void constructBody() {
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");    
-        String dateString = df.format(this.date);
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy"); // Menetapkan standar format tanggal  
+        String dateString = df.format(this.date); // Mengubah date menjadi string
         this.content += String.format("""
             Free Trial date: %s
             Price: Rp. %d""", dateString, this.price);
-        this.total = this.price;
+        this.total = this.price; // Menetapkan harga trial sebagai total
     }
 }
 
+// Class MembershipReceipt yang mewarisi Receipt
+// Berguna untuk membuat Receipt (struk) dengan content Membership
 class MembershipReceipt extends Receipt {
-    private Membership membership;
+    private Membership membership; // berisi objek membership yang dipilih user
 
     public MembershipReceipt(String fullName, String email, Membership membership) {
         super(fullName, email);
@@ -78,6 +94,7 @@ class MembershipReceipt extends Receipt {
         this.constructFooter();
     }
 
+    // Membangun content struk sesuai dengan data yang membership miliki
     protected void constructBody() {
         this.content += String.format("""
                 Membership: %s
@@ -87,8 +104,10 @@ class MembershipReceipt extends Receipt {
     }
 }
 
+// Class CartReceipt yang mewarisi Receipt
+// Berguna untuk membuat Receipt (struk) dengan content yang berada di dalam keranjang (cart)
 class CartReceipt extends Receipt {
-    private ArrayList<Suplement> cart;
+    private ArrayList<Suplement> cart; // berisi keranjang saat memilih suplement
 
     public CartReceipt(String fullName, String email, ArrayList<Suplement> cart) {
         super(fullName, email);
@@ -98,9 +117,9 @@ class CartReceipt extends Receipt {
         this.constructFooter();
     }
 
+    // Membangun content struk sesuai dengan data (setiap suplement) yang cart (keranjang) miliki
     protected void constructBody() {
-        int total = 0;
-        // Construct items list
+        // Membangun content suplemen yang berada di dalam cart satu persatu
         String items = "";
         for (Suplement suplement : cart) {
             items += String.format("""
@@ -108,17 +127,15 @@ class CartReceipt extends Receipt {
                     (%s)
                     \tQty: %d
                     """, suplement.name, suplement.price, suplement.selectedVariant, suplement.selectedQuantity);
-            total += suplement.price * suplement.selectedQuantity;
+            this.total += suplement.price * suplement.selectedQuantity; // menambahkan total
         }
-
-        String totalStr = String.format("\nTotal:\t Rp. %d", total);
-        this.content += items + totalStr;
-        this.total = total;
     }
 }
 
+// Class PersonalTrainerReceipt yang mewarisi Receipt
+// Berguna untuk membuat Receipt (struk) dengan content yang PersonalTrainer miliki
 class PersonalTrainerReceipt extends Receipt {
-    private PersonalTrainer trainer;
+    private PersonalTrainer trainer; // berisi PersonalTrainer yang dipilih user
 
     public PersonalTrainerReceipt(String fullName, String email, PersonalTrainer trainer) {
         super(fullName, email);
@@ -128,6 +145,7 @@ class PersonalTrainerReceipt extends Receipt {
         this.constructFooter();
     }
 
+    // Membangun content struk sesuai dengan data yang PersonalTrainer miliki
     protected void constructBody() {
         this.content += String.format("""
             Personal Trainer: %s
@@ -137,8 +155,10 @@ class PersonalTrainerReceipt extends Receipt {
     }
 }
 
+// Class BundleReceipt yang mewarisi Receipt
+// Berguna untuk membuat Receipt (struk) dengan content yang Bundle miliki
 class BundleReceipt extends Receipt {
-    private Bundle bundle;
+    private Bundle bundle; // Bundle yang dipilih user
 
     public BundleReceipt(String fullName, String email, Bundle bundle) {
         super(fullName, email);
@@ -148,6 +168,7 @@ class BundleReceipt extends Receipt {
         this.constructFooter();
     }
 
+    // Membangun content struk sesuai dengan data yang Bundle miliki
     protected void constructBody() {
         this.content += String.format("""
                 %s
@@ -156,6 +177,6 @@ class BundleReceipt extends Receipt {
                 %s (%d scoop/week)
                 Rp. %d
                 """, bundle.name, bundle.membership.name, bundle.personalTrainer.name, bundle.suplement.name, bundle.scoopQuota, bundle.price);
-        this.total = this.bundle.price;
+        this.total = this.bundle.price; // Menetapkan harga total sesuai dengan harga bundle
     }
 }

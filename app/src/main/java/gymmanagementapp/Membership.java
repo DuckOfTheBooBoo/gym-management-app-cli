@@ -1,14 +1,10 @@
 package gymmanagementapp;
 
+// Class untuk merepresentasikan objek Membership
 public class Membership {
-    // atribut name yang memiliki tipe data String
-    // Tapi kayaknya yg ditampilin kek kode nya terus di samping class diagramnya
-    // Iya
-    // Kalo di bundle, iya. Di bundle doang sih
-    // gpp :)
-    public String name = "";
-    public int price = 0;
-    public int durationMonth = 0;
+    public String name = ""; // nama memberhsip
+    public int price = 0; // harga membership
+    public int durationMonth = 0; // Durasi lama membership dalam bulan
 
     public Membership(String name, int price, int durationMonth) {
         this.name = name;
@@ -16,11 +12,13 @@ public class Membership {
         this.durationMonth = durationMonth;
     }
 
+    // Mengembalikan detail membership
     public String getDetails() {
         return String.format("%s (Rp. %d)", this.name, this.price);
     }
 }
 
+// Class pembantu untuk membuat objek Membership
 class MembershipHelper {
     private static Membership[] memberships = {
         new Membership("One Month", 250000, 1),
@@ -29,6 +27,7 @@ class MembershipHelper {
         new Membership("12 Months (1 year)", 2500000, 12)
     };
 
+    // Method untuk mengembalikan daftar objek Membership
     public static Membership[] getMemberships() {
         return memberships;
     }

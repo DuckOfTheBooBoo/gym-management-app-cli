@@ -2,14 +2,15 @@ package gymmanagementapp;
 
 import java.util.Arrays;
 
+// Class untuk merepresentasikan objek Suplement
 public class Suplement {
-    public String name = "";
-    public String description = "";
-    public String[] variants;
-    public String selectedVariant = null;
-    public int selectedQuantity = 0;
-    public int price = 0;
-    public int stock = 0;
+    public String name = ""; // NAMA SUPLEMENT
+    public String description = ""; // Deskripsi suplement
+    public String[] variants; // varian suplement
+    public String selectedVariant = null; // varian yang dipilih
+    public int selectedQuantity = 0; // kuantitas yang dipilih
+    public int price = 0; // harga suplement
+    public int stock = 0; // stok suplemen
 
     public Suplement(String name, String description, String[] variants, int price, int stock) {
         this.name = name;
@@ -19,6 +20,7 @@ public class Suplement {
         this.stock = stock;
     }
 
+    // Mengembalikan detail suplement
     public String getDetails() {
         return String.format("""
                 %s
@@ -30,6 +32,7 @@ public class Suplement {
     }
 }
 
+// Class pembantu Suplement
 class SuplementHelper {
     private static Suplement[] suplements = {
         new Suplement("Pro Garnier 900gr", "Pro Garnier adalah suplemen mass garnier untuk meningkatkan berat badan\n    yang sehat dan berkontribusi pada pertumbuhan massa otot.", new String[] {"Glame Chocolate", "Caramel Fusion", "Honeydew Melon", "Choco Mint", "Vanilla Popcorn"}, 245000, 12),
@@ -39,6 +42,7 @@ class SuplementHelper {
         new Suplement("Pro Isolate 900gr + Pro Garnier 900gr (Combo Deals)", "Varian Combo Deals ini sangat cocok bagi yang ingin Bulking, karena menyerap daya 90% yang\n    mampu menambah asupan protein harian membuat pertumbuhan otot semakin sempurna.", new String[] {"Caramel Fusion", "Glame Chocolate", "Honeydew Melon", "Vanilla Popcorn", "Choco Mint"}, 672000, 7),
     };
     
+    // method yang berguna untuk mengembalikan daftar objek Suplement
     public static Suplement[] getSuplements() {
         return suplements;
     }

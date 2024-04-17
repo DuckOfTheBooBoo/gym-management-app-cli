@@ -4,19 +4,15 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 
 public class PersonalTrainer {
-    public String name;
-    public int fee;
-    public int rating;
-    public Date date;
+    public String name; // nama PersonalTrainer
+    public int fee; // Biaya sewa PersonalTrainer
+    public int rating; // Rating PersonalTrainer
+    public Date date; // Tanggal reservasi Personaltrainer
 
     public PersonalTrainer(String name, int fee, int rating) {
         this.name = name;
         this.fee = fee;
         this.rating = rating;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
     }
 
     // Ini mengubah tipe data Date menjadi string dd/MM/yyyy (hari/bulan/tahun)
@@ -28,6 +24,7 @@ public class PersonalTrainer {
         return df.format(this.date);
     }
 
+    // Mendapatkan detail PersonalTrainer (digunakan untuk membangun daftar PersonalTrainer dalam method selectPersonalTrainer App.java)
     public String getDetails() {
         return String.format("""
                 %s
@@ -37,6 +34,7 @@ public class PersonalTrainer {
     }
 }
 
+// Class pembantu untuk membuat daftar objek PersonalTrainer
 class PersonalTrainerHelper {
     private static PersonalTrainer[] personalTrainers = {
         new PersonalTrainer("Bambang Supraptno", 56000, 4),
@@ -46,6 +44,7 @@ class PersonalTrainerHelper {
         new PersonalTrainer("David Ferguson", 50000, 4)
     };
 
+    // Mengembalikan daftar PersonalTrainer
     public static PersonalTrainer[] getPersonalTrainers() {
         return personalTrainers;
     }
