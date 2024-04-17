@@ -105,7 +105,7 @@ class SuplementHelper {
             
             // Select quantity
             while (true) {
-                String quantity = JOptionPane.showInputDialog(null, "Input quantity:", "Select Quantity", JOptionPane.PLAIN_MESSAGE);
+                String quantity = JOptionPane.showInputDialog(null, "Input quantity: (available stock: " + selectedSuplement.stock + ")", "Select Quantity", JOptionPane.PLAIN_MESSAGE);
 
                 try {
                     int quantityInt = Integer.parseInt(quantity);

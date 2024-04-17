@@ -151,11 +151,11 @@ class BundleReceipt extends Receipt {
     protected void constructBody() {
         this.content += String.format("""
                 %s
-                %s
-                %s
-                %s (%d scoop/week)
+                  - %s Membership
+                  - Personal Trainer %s at %s
+                  - %s (%d scoop/week)
                 Rp. %d
-                """, bundle.name, bundle.membership.name, bundle.personalTrainer.name, bundle.suplement.name, bundle.scoopQuota, bundle.price);
+                """, bundle.name, bundle.membership.name, bundle.personalTrainer.name, bundle.personalTrainer.getDateString(), bundle.suplement.name, bundle.scoopQuota, bundle.price);
         this.total = this.bundle.price;
     }
 }
