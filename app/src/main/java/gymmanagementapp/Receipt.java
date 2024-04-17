@@ -9,6 +9,7 @@ abstract public class Receipt {
     protected String content = "";
     protected String fullName;
     protected String email;
+    protected int total;
 
     public Receipt(String fullName, String email) {
         this.fullName = fullName;
@@ -22,16 +23,25 @@ abstract public class Receipt {
     protected void constructHeader() {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String header = String.format("""
-                ========RECEIPT=========
+                ========GYM EXPERT========
+                Jakarta, M.H. Tamrin City
                 Date: %s
                 Full name: %s
                 E-mail: %s
-                ========CONTENT=========
+                ==========================
                 """, df.format(new Date()), fullName, email);
         this.content += header;
     }
 
     abstract protected void constructBody();
+
+    protected void constructFooter() {
+        this.content += String.format("""
+            
+                ==========================
+                TOTAL: Rp. %d
+                """,this.total);
+    }
 }
 
 class TrialReceipt extends Receipt {
@@ -44,6 +54,7 @@ class TrialReceipt extends Receipt {
         this.price = price;
         this.constructHeader();
         this.constructBody();
+        this.constructFooter();
     }
 
     protected void constructBody() {
@@ -52,6 +63,7 @@ class TrialReceipt extends Receipt {
         this.content += String.format("""
             Free Trial date: %s
             Price: Rp. %d""", dateString, this.price);
+        this.total = this.price;
     }
 }
 
@@ -63,6 +75,7 @@ class MembershipReceipt extends Receipt {
         this.membership = membership;
         this.constructHeader();
         this.constructBody();
+        this.constructFooter();
     }
 
     protected void constructBody() {
@@ -70,6 +83,7 @@ class MembershipReceipt extends Receipt {
                 Membership: %s
                 Price: Rp. %d
                 """, membership.name, membership.price);
+        this.total = this.membership.price;
     }
 }
 
@@ -81,6 +95,7 @@ class CartReceipt extends Receipt {
         this.cart = cart;
         this.constructHeader();
         this.constructBody();
+        this.constructFooter();
     }
 
     protected void constructBody() {
@@ -98,6 +113,7 @@ class CartReceipt extends Receipt {
 
         String totalStr = String.format("\nTotal:\t Rp. %d", total);
         this.content += items + totalStr;
+        this.total = total;
     }
 }
 
@@ -109,6 +125,7 @@ class PersonalTrainerReceipt extends Receipt {
         this.trainer = trainer;
         this.constructHeader();
         this.constructBody();
+        this.constructFooter();
     }
 
     protected void constructBody() {
@@ -116,6 +133,7 @@ class PersonalTrainerReceipt extends Receipt {
             Personal Trainer: %s
             Date: %s
             Fee: Rp. %d""", trainer.name, trainer.getDateString(), trainer.fee);       
+        this.total = this.trainer.fee;
     }
 }
 
@@ -127,6 +145,7 @@ class BundleReceipt extends Receipt {
         this.bundle = bundle;
         this.constructHeader();
         this.constructBody();
+        this.constructFooter();
     }
 
     protected void constructBody() {
@@ -137,5 +156,6 @@ class BundleReceipt extends Receipt {
                 %s (%d scoop/week)
                 Rp. %d
                 """, bundle.name, bundle.membership.name, bundle.personalTrainer.name, bundle.suplement.name, bundle.scoopQuota, bundle.price);
+        this.total = this.bundle.price;
     }
 }

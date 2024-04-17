@@ -19,6 +19,10 @@ public class PersonalTrainer {
         this.date = date;
     }
 
+    // Ini mengubah tipe data Date menjadi string dd/MM/yyyy (hari/bulan/tahun)
+    // Sejatinya, tipe data Date bukanlah objek yang bisa direpresentasikan secara string
+    // Date bukanlah String dan sebaliknya. Date merupakan tipe data yang terpisah; berbeda dengan String. Namun sebuah tanggal (Date) dapat direpresentasikan ke dalam String dengan bentuk (hari/bulan/tahun)
+    // Jadi, cara kita menggunakan sebuah tanggal di dalam Java adalah dengan menggunakan tipe data Date. Namun, dalam Java, tipe data Date bukanlah String; sebuah objek teks.
     public String getDateString() {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return df.format(this.date);

@@ -1,6 +1,11 @@
 package gymmanagementapp;
 
 public class Membership {
+    // atribut name yang memiliki tipe data String
+    // Tapi kayaknya yg ditampilin kek kode nya terus di samping class diagramnya
+    // Iya
+    // Kalo di bundle, iya. Di bundle doang sih
+    // gpp :)
     public String name = "";
     public int price = 0;
     public int durationMonth = 0;

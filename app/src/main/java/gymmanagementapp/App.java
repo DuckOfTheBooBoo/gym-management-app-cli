@@ -10,6 +10,7 @@ public class App {
     private static String fullName = null;
     private static String email = null;
     
+    // Function ini berguna untuk menerima input tanggal
     public static Date dateInput(String dialogMsg, String title) {
         Date date = null;
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -35,9 +36,12 @@ public class App {
         return date;
     }
 
+    // Kesini gengs
     public static void trialPass() {
         Date date = null;
         int price = 32000;
+        
+        // Ini teks yang akan ditampilkan di dialog swing JOptionPane
         String trialDialogMsg = "Trial Price: Rp. 32.000\nEnter date (dd/MM/yyyy):";
 
         date = dateInput(trialDialogMsg, "Select Trial Date");
@@ -258,43 +262,94 @@ public class App {
     public static void main(String[] args) {
         // Instances initialization
         // Ask for name and email
+
+        // Disini kita menggunakan while loop untuk mengulang program hingga user menekan tombol cancel.
         while (true) {
+            // Disini kita minta user memasukkan name.
             fullName = JOptionPane.showInputDialog(null, "WELCOME TO GYM EXPERT\nEnter your name:", "GYM EXPERT", JOptionPane.PLAIN_MESSAGE);
+
+            if (fullName == null) {
+                System.exit(0);
+            }
+
+            // Disini kita meminta user memasukan email.
             email = JOptionPane.showInputDialog(null, "Enter your e-mail:", "GYM EXPERT", JOptionPane.PLAIN_MESSAGE);
 
-            if ((fullName == null || fullName.isEmpty()) || (email == null || email.isEmpty())) {
+            if (email == null) {
+                System.exit(0);
+            }
+
+            // Kita menggunakan IF statement untuk mengecek apakah user memasukkan name dan email.
+            // Disini kita mengecek jika fullName adalah null atau email adalah null
+            // fullName dan email bisa memiliki nilai null jika pada dialog, kita click cancel
+            // atau tidak memasukkan input apapun.
+            // if ((fullName == null || fullName.isEmpty()) || (email == null || email.isEmpty())) {
+            if (fullName.isEmpty() || email.isEmpty()) {
+                // Jika user tidak memasukkan name dan email,
+                // kita minta user memasukkan kembali name dan email.
                 JOptionPane.showMessageDialog(null, "Please enter your name and e-mail.", "Invalid input", JOptionPane.ERROR_MESSAGE);
             } else {
+                // Jika kedua variable (fullName dan email) memiliki nilai bukan null
+                // Maka kita akan keluar dari loop untuk lanjut ke proses selanjutnya.
                 break;
             }
         }
-        
+
+        // KESINI GENGS
+        // Disini kita meminta user untuk memilih pilihan
+        // Pilihan tersebut diantaranya adalah
+        /*
+            Trial
+            Personal Trainer
+            Membership
+            Suplement
+            Bundle
+         */        
         Object choiceInput = JOptionPane.showInputDialog(null, "Select options below", "Select option", JOptionPane.PLAIN_MESSAGE, null, new Object[]{"Trial", "Personal Trainer", "Membership", "Suplement", "Bundle"}, "Trial");
 
+        // Jika user tidak memilih apapun, maka choiceInput bernilai null        
+        // Kode ini sama seperti
+        /*
+         * if (choiceInput == null) {
+             choice = "";
+           } else {
+             choice = choiceInput.toString();
+           }
+         */
         String choice = choiceInput != null ? choiceInput.toString() : "";
 
-
+        // Disini kita menggunakan switch case untuk melakukan percabangan logika
         switch (choice) {
+            // Jika user memilih Trial, maka kita akan memanggil prosedur trialPass()
             case "Trial":
                 trialPass();
                 break;
             
+            // Jika user memilih Personal Trainer, maka kita akan memanggil prosedur 
+            // personalTrainer()
             case "Personal Trainer":
                 personalTrainer();
                 break;
             
+            // Jika user memilih Membership, maka kita akan memanggil prosedur
+            // membership()
             case "Membership":
                 membership();
                 break;
             
+            // Jika user memilih Suplement, maka kita akan memanggil prosedur
+            // suplement()
             case "Suplement":
                 suplement();
                 break;
             
+            // Jika user memilih Bundle, maka kita akan memanggil prosedur
+            // bundle()
             case "Bundle":
                 bundle();
                 break;
             
+            // Jika user tidak memilih apapun, maka akan keluar dari program
             default:
                 JOptionPane.showMessageDialog(null, "You did not select any option. Exiting...");
                 break;
