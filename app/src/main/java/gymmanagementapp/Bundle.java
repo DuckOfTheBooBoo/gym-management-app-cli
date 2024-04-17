@@ -3,13 +3,13 @@ package gymmanagementapp;
 import java.util.ArrayList;
 
 public class Bundle {
-    public String name = ""; // Nama bundle
-    public int price = 0; // Harga bundle
-    public int scoopQuota = 0; // kuota suplemen per bulan
-    public String description = ""; // deskripsi bundle
-    public Suplement suplement; // suplement yang akan dipilih
-    public Membership membership; // membership yang akan dipilih
-    public PersonalTrainer personalTrainer; // personal trainer yang akan dipilih
+    public String name = ""; 
+    public int price = 0;
+    public int scoopQuota = 0;
+    public String description = ""; 
+    public Suplement suplement;
+    public Membership membership;
+    public PersonalTrainer personalTrainer;
 
     public Bundle(String name, int price, int scoopQuota, String description, Suplement suplement, Membership membership, PersonalTrainer personalTrainer) {
         this.name = name;
@@ -21,7 +21,6 @@ public class Bundle {
         this.personalTrainer = personalTrainer;
     }
 
-    // Mengembalikan detail bundle
     public String getDetails() {
         return String.format("""
             %s
@@ -31,11 +30,9 @@ public class Bundle {
     }
 }
 
-// Class pembantu untuk Bundle
 class BundleHelper {
     private static ArrayList<Bundle> bundles = new ArrayList<Bundle>();
 
-    // method untuk memberikan daftar objek Bundle
     public static ArrayList<Bundle> getBundles() {
         if (bundles.size() == 0) {
             Membership[] memberships = MembershipHelper.getMemberships();            
