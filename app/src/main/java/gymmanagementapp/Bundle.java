@@ -1,6 +1,7 @@
 package gymmanagementapp;
 
-import java.util.ArrayList;
+import java.util.*;
+import javax.swing.*;
 
 public class Bundle {
     public String name = "";
@@ -41,5 +42,50 @@ class BundleHelper {
             bundles.add(new Bundle("Bundle MAJAPAHIT", 3400000, 1, "12 Months Membership\nFree 2 Personal Trainer Session\nFree Suplement 4 scoop/week", null, memberships[2], null));
         }
         return bundles;
+    }
+
+    public static void selectBundle(String fullName, String email) {
+        ArrayList<Bundle> bundles = BundleHelper.getBundles();
+        Bundle selectedBundle = null;
+        ArrayList<String> bundleOptions = new ArrayList<String>();
+        Map<String, Integer> bundleMap = new HashMap<>();
+        
+        String dialogMsg = "";
+
+        for(int i = 0; i < bundles.size(); i++) {
+            dialogMsg += String.format("%d. %s", i + 1, bundles.get(i).getDetails());    
+            bundleOptions.add(bundles.get(i).name);
+            bundleMap.put(bundles.get(i).name, i);
+        }
+
+        Object choiceInput = JOptionPane.showInputDialog(null, dialogMsg, "Select Bundle", JOptionPane.PLAIN_MESSAGE, null, bundleOptions.toArray(), null);
+
+        if (choiceInput == null) {
+            JOptionPane.showMessageDialog(null, "You did not select any bundle. Exiting...");
+            return;
+        }
+
+        int bundleIndex = bundleMap.get(choiceInput);
+        selectedBundle = bundles.get(bundleIndex);
+
+        // Choose suplement
+        Suplement selectedSuplement = SuplementHelper.selectSuplement();
+
+        if (selectedSuplement == null) {
+            return;
+        }
+
+        selectedBundle.suplement = selectedSuplement;
+
+        // Choose Personal trainer
+        PersonalTrainer selectedPersonalTrainer = PersonalTrainerHelper.selectPersonalTrainer();
+
+        if (selectedPersonalTrainer == null) {
+            return;
+        }
+
+        selectedBundle.personalTrainer = selectedPersonalTrainer;
+        Receipt receipt = new BundleReceipt(fullName, email, selectedBundle);
+        receipt.showReceipt();
     }
 }

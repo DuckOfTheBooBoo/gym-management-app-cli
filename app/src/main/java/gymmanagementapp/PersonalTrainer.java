@@ -2,6 +2,8 @@ package gymmanagementapp;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.*;
+import javax.swing.JOptionPane;
 
 public class PersonalTrainer {
     public String name;
@@ -19,10 +21,6 @@ public class PersonalTrainer {
         this.date = date;
     }
 
-    // Ini mengubah tipe data Date menjadi string dd/MM/yyyy (hari/bulan/tahun)
-    // Sejatinya, tipe data Date bukanlah objek yang bisa direpresentasikan secara string
-    // Date bukanlah String dan sebaliknya. Date merupakan tipe data yang terpisah; berbeda dengan String. Namun sebuah tanggal (Date) dapat direpresentasikan ke dalam String dengan bentuk (hari/bulan/tahun)
-    // Jadi, cara kita menggunakan sebuah tanggal di dalam Java adalah dengan menggunakan tipe data Date. Namun, dalam Java, tipe data Date bukanlah String; sebuah objek teks.
     public String getDateString() {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return df.format(this.date);
@@ -48,5 +46,44 @@ class PersonalTrainerHelper {
 
     public static PersonalTrainer[] getPersonalTrainers() {
         return personalTrainers;
+    }
+
+    public static PersonalTrainer selectPersonalTrainer() {
+        PersonalTrainer[] trainers = PersonalTrainerHelper.getPersonalTrainers();
+        PersonalTrainer selectedTrainer = null;
+        Map<String, Integer> trainerMap = new HashMap<String, Integer>();
+
+
+        // Construct menu string
+        String pTDialogMsg = "";
+        for (int i = 0; i < trainers.length; i++) {
+            trainerMap.put(trainers[i].name, i + 1);
+            pTDialogMsg += String.format("%d. %s", i + 1, trainers[i].getDetails());
+        }
+
+        for (int i = 0; i < trainers.length; i++) {
+            trainerMap.put(trainers[i].name, i);
+        }
+
+        Object ptChoiceInput = JOptionPane.showInputDialog(null, pTDialogMsg, "Select Personal Trainer", JOptionPane.PLAIN_MESSAGE, null, trainerMap.keySet().toArray(), 1);
+
+        if (ptChoiceInput == null) {
+            JOptionPane.showMessageDialog(null, "You did not select any personal trainers. Exiting...");
+            return null;
+        }
+
+        int trainerIndex = trainerMap.get(ptChoiceInput);
+        selectedTrainer = trainers[trainerIndex];
+        Date date = Util.dateInput("Input personal trainer date (dd/MM/yyyy):", "Personal Trainer Date");
+        selectedTrainer.setDate(date);
+
+        return selectedTrainer;
+    }
+
+    public static void ptProcedure(String fullName, String email) {
+        PersonalTrainer selectedTrainer = selectPersonalTrainer();
+
+        Receipt receipt = new PersonalTrainerReceipt(fullName, email, selectedTrainer);
+        receipt.showReceipt();
     }
 }

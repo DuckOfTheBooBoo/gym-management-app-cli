@@ -1,11 +1,9 @@
 package gymmanagementapp;
 
+import javax.swing.*;
+import java.util.*;
+
 public class Membership {
-    // atribut name yang memiliki tipe data String
-    // Tapi kayaknya yg ditampilin kek kode nya terus di samping class diagramnya
-    // Iya
-    // Kalo di bundle, iya. Di bundle doang sih
-    // gpp :)
     public String name = "";
     public int price = 0;
     public int durationMonth = 0;
@@ -31,5 +29,35 @@ class MembershipHelper {
 
     public static Membership[] getMemberships() {
         return memberships;
+    }
+
+    public static void selectMembership(String fullName, String email) {
+        Membership[] memberships = MembershipHelper.getMemberships();
+        Membership selectedMembership = null;
+        ArrayList<String> membershipOptions = new ArrayList<String>();
+        Map<String, Integer> membershipMap = new HashMap<>();
+
+        // Construct dialog message
+        for (int i = 0; i < memberships.length; i++) {
+            membershipOptions.add(memberships[i].getDetails());
+            membershipMap.put(memberships[i].getDetails(), i);
+        }
+
+        Object choiceInput = JOptionPane.showInputDialog(null, "Select Membership", "Select Membership", JOptionPane.PLAIN_MESSAGE, null, membershipOptions.toArray(), null);
+
+        if (choiceInput == null) {
+            JOptionPane.showMessageDialog(null, "You did not select any membership. Exiting...");
+            return;
+        }
+
+        int membershipIndex = membershipMap.get(choiceInput);
+        selectedMembership = memberships[membershipIndex];
+
+        if (selectedMembership == null) {
+            return;
+        }
+
+        Receipt receipt = new MembershipReceipt(fullName, email, selectedMembership);
+        receipt.showReceipt();
     }
 }
